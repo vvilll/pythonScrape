@@ -17,7 +17,7 @@ def scraper():
     stockNames = results.find_all("div", class_="leftAlignHeader companyName yf-362rys enableMaxWidth")
     stockPrices = results.find_all("fin-streamer")
     for i in range(len(stockSymbols)):
-        print(stockSymbols[i].text.strip() + "(" + stockNames[i].text.strip() + "): " +  stockPrices[i*6].text.strip())
+        print(stockSymbols[i].text.strip() + "(" + (stockNames[i].text.strip())[1:] + "): " +  stockPrices[i*6].text.strip())
 
 
 if __name__ == "__main__":

@@ -30,10 +30,20 @@ def scraper():
             if arg == (stockSymbols[i].text.strip())[1:]:
                 usrPrice = stockPrices[i*6].text.strip()
                 print(stockNames[i].text.strip() + '\n' + 'Current price is $' + stockPrices[i*6].text.strip() + '\n')
-            for file in os.listdir('.finance'):
-                if file.startswith(arg):
-                    stock = open(file, 'r')
-                    print('The old price was$' + stock.readline().strip() + '\n')
+                for file in os.listdir('.finance'):
+                    if file.startswith(arg):
+                        stock = open(file, 'r')
+                        oldStockPrice = stock.readline().strip()
+                        print('The old price was$' + oldStockPrice + '\n')
+                        priceDiff = int(oldStockPrice) - int(usrPrice)
+                        if priceDiff < 0:
+                            print('Price decreased by $' + priceDiff) #still need to include date
+                        elif priceDiff > 0:
+                            print('Price increased by $' + priceDiff) #still need to include date
+                        else:
+                            print('Price has not changed')
+                        os.remove(file)
+                        #need to create file with new price
 
     
 

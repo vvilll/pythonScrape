@@ -2,11 +2,12 @@
 #   If needed run
 #       sudo apt install python3-pip
 #       pip3 install requests beautifulsoup4
-
-import requests
-from bs4 import BeautifulSoup
 import os
 import sys
+from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
+
 
 def scraper():
     URL = "https://finance.yahoo.com/markets/world-indices/"
@@ -25,25 +26,37 @@ def scraper():
 
     for arg in (sys.argv[1:]):
         arg = arg.upper()
+        arg = 'DJI'
+        print('args: ' + arg) 
         for i in range(len(stockSymbols)):
-            usrPrice = -1
             if arg == (stockSymbols[i].text.strip())[1:]:
                 usrPrice = stockPrices[i*6].text.strip()
-                print(stockNames[i].text.strip() + '\n' + 'Current price is $' + stockPrices[i*6].text.strip() + '\n')
+                print(stockNames[i].text.strip() + '\n' + 'Current price is $' + stockPrices[i*6].text.strip())
+                filefound = 0
                 for file in os.listdir('.finance'):
                     if file.startswith(arg):
-                        stock = open(file, 'r')
+                        fileFound = 1
+                        oldFile = '.finance/' + file
+                        stock = open(oldFile, 'r')
                         oldStockPrice = stock.readline().strip()
-                        print('The old price was$' + oldStockPrice + '\n')
-                        priceDiff = int(oldStockPrice) - int(usrPrice)
+                        print('The old price was $' + oldStockPrice)
+                        priceDiff = float(oldStockPrice.replace(',','')) - float(usrPrice.replace(',',''))
                         if priceDiff < 0:
-                            print('Price decreased by $' + priceDiff) #still need to include date
+                            print('Price decreased by $' + str(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:]) 
                         elif priceDiff > 0:
-                            print('Price increased by $' + priceDiff) #still need to include date
+                            print('Price increased by $' + str(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:]) 
                         else:
-                            print('Price has not changed')
-                        os.remove(file)
-                        #need to create file with new price
+                            print('Price has not changed since you last check on ' + file[4:14] + ' ' + file[15:])
+                        os.remove('.finance/' + file)
+
+                flName = '.finance/' + arg + '_' + datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+                open(flName, 'x')
+                fd = open(flName, 'w')
+                fd.write(usrPrice + '\n')
+                fd.close()
+
+                    
+
 
     
 

@@ -26,8 +26,6 @@ def scraper():
 
     for arg in (sys.argv[1:]):
         arg = arg.upper()
-        arg = 'DJI'
-        print('args: ' + arg) 
         for i in range(len(stockSymbols)):
             if arg == (stockSymbols[i].text.strip())[1:]:
                 usrPrice = stockPrices[i*6].text.strip()
@@ -42,11 +40,11 @@ def scraper():
                         print('The old price was $' + oldStockPrice)
                         priceDiff = float(oldStockPrice.replace(',','')) - float(usrPrice.replace(',',''))
                         if priceDiff < 0:
-                            print('Price decreased by $' + str(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:]) 
+                            print('Price decreased by $' + "{:.2f}".format(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:] + '\n') 
                         elif priceDiff > 0:
-                            print('Price increased by $' + str(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:]) 
+                            print('Price increased by $' + "{:.2f}".format(priceDiff) + ' since you last check on ' + file[4:14] + ' ' + file[15:] + '\n') 
                         else:
-                            print('Price has not changed since you last check on ' + file[4:14] + ' ' + file[15:])
+                            print('Price has not changed since you last check on ' + file[4:14] + ' ' + file[15:] + '\n')
                         os.remove('.finance/' + file)
 
                 flName = '.finance/' + arg + '_' + datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
